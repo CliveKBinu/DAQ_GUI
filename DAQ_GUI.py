@@ -6,7 +6,6 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, FigureCanvasAgg
 from matplotlib.figure import Figure
 import tkinter as Tk
 import matplotlib.pyplot as plt
-import numpy as np
 
 
 def draw_figure(canvas, figure, loc=(0, 0)):
