@@ -1,11 +1,12 @@
 from tkinter import *
 from random import randint
 import PySimpleGUI as sg
-from PySimpleGUI.PySimpleGUI import Graph
+from PySimpleGUI.PySimpleGUI import Graph, Print
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, FigureCanvasAgg
 from matplotlib.figure import Figure
 import tkinter as Tk
 import matplotlib.pyplot as plt
+import timeit
 
 
 def draw_figure(canvas, figure, loc=(0, 0)):
@@ -14,11 +15,6 @@ def draw_figure(canvas, figure, loc=(0, 0)):
     figure_canvas_agg.get_tk_widget().pack(side='top', fill='both', expand=1)
     return figure_canvas_agg
 
-'''
-def delete_figure_agg(figure_agg):
-    figure_agg.get_tk_widget().forget()
-    plt.close()
-'''
 
 NUM_DATAPOINTS = 10000
 dpts = [randint(0, 10) for x in range(NUM_DATAPOINTS)]
@@ -26,7 +22,11 @@ dpts = [randint(0, 10) for x in range(NUM_DATAPOINTS)]
 def startpage():
     layout = [[sg.Text('Max Events',pad=(30,30)),sg.InputText(size=(50,50))],
               [sg.Button('Continuous Run',pad=(30,0)),sg.Button('Test Run',pad=(80,0))]]
-    return sg.Window('APDL DAQ GUI', layout,finalize=TRUE,size=(400,150)) # Finalize = True should be added so inorder to interaat with elements 
+    window = sg.Window('APDL DAQ GUI', layout,finalize=TRUE,size=(400,150)) # Finalize = True should be added so inorder to interaat with elements 
+    #event,values = window.read()
+    #max_events = int(values[0])
+    #estimated_runtime = max_events/(2*60)
+    return window
 
 
 def Runmode():
@@ -36,7 +36,7 @@ def Runmode():
            [sg.Text('Events Recorded:')]]   
 
     col_2 = [[sg.Text('Emission File Directory:')],      
-           [sg.Text('Estimated Run End Time:')],      
+           [sg.Text('Estimated Run End Time:'),sg.Text(estimated_runtime)],      
            [sg.Text('Quanah Status:')]]   
 
     # delete col_3 after implementing a way to move to next window       
@@ -72,13 +72,26 @@ def Daqmode():
 
 
 
-window1,window2 = startpage(),None #starting the first page but not the second page   
+window1 = startpage() #starting the first page   
 
 while True:            
 
     window, event, values = sg.read_all_windows()
+
     if event == sg.WIN_CLOSED:
-        window.close()
+        if window == window1:
+            break
+        #except AttributeError:
+         #  pass
+
+    try:
+        event1 , values1 = window1.read(timeout=10)
+        max_events = int(values1[0])
+        print(max_events)
+    except TypeError:
+        pass
+
+    estimated_runtime = max_events/(2*60)
   
     if event == 'Test Run':
         window2,canvas,ax,fig_agg,fig = Runmode()
