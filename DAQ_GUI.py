@@ -6,7 +6,11 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, FigureCanvasAgg
 from matplotlib.figure import Figure
 import tkinter as Tk
 import matplotlib.pyplot as plt
-import timeit
+from datetime import datetime
+
+
+now = datetime.now()
+current_time = now.strftime("%I:%M %p")
 
 
 def draw_figure(canvas, figure, loc=(0, 0)):
@@ -32,7 +36,7 @@ def startpage():
 def Runmode():
     
     col_1 = [[sg.Text('Run Number:')],      
-           [sg.Text('Run Start Time:')],      
+           [sg.Text('Run Start Time:'),sg.Text(current_time)],      
            [sg.Text('Events Recorded:')]]   
 
     col_2 = [[sg.Text('Emission File Directory:')],      
@@ -47,7 +51,7 @@ def Runmode():
             sg.Radio('Coincidence','graph_radio',pad=(50,0),key="-IN2-",enable_events=True)],
             [sg.Canvas(size=(640, 480), key='-CANVAS-')]]
 
-    window = sg.Window('RUN MODE', layout, finalize=True,size=(500,375))
+    window = sg.Window('RUN MODE', layout, finalize=True,size=(600,375))
     canvas_elem = window['-CANVAS-']
     canvas = canvas_elem.TKCanvas
 
