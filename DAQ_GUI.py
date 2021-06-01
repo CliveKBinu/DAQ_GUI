@@ -80,18 +80,18 @@ while True:
     if event == sg.WIN_CLOSED:
         window.close()
   
-    elif event == 'Test Run':
+    if event == 'Test Run':
         window2,canvas,ax,fig_agg,fig = Runmode()
         window2.bring_to_front()
     
-    elif event == 'Next':
+    if event == 'Next':
         window2.close()
         print('hello')
         window3 = runmode1()
         window3.bring_to_front()
 
 
-    elif event == '-IN-':
+    if event == '-IN-':
 
         # replace this with the nesscary code
 
@@ -107,7 +107,7 @@ while True:
             ax.plot(range(data_points), dpts[i:i+data_points],  color='purple')
             fig_agg.draw()
                 
-    elif event =='-IN1-':
+    if event =='-IN1-':
 
         for i in range(len(dpts)):
             event, values = window2.read(timeout=10)
@@ -121,7 +121,7 @@ while True:
 
 
 
-    elif event =='-IN2-':
+    if event =='-IN2-':
 
 
         for i in range(len(dpts)):
@@ -135,7 +135,7 @@ while True:
             fig_agg.draw()
         
 
-    elif event == 'Continuous Run':
+    if event == 'Continuous Run':
         #window1.close()
         window4 = Daqmode()
         window4.bring_to_front()
