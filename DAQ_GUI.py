@@ -33,17 +33,18 @@ def ping_stat(window,max_events):
     #while time.time() < t_end:
     for i in range(max_events):
         a = ping('8.8.8.8')
-        if a != None:
-            window['status'].update('UP',text_color='Green')
-            print('Up')
-        else:
+        if a is None:
             window['status'].update('DOWN',text_color='red')
             print('down')
+        else:
+            window['status'].update('UP',text_color='Green')
+            print('Up')
         time.sleep(3)
 
         i+=1
-        print(i)
+        #print(i)
         window.write_event_value('-THREAD1-',i)
+    return
 
 
 
@@ -51,8 +52,10 @@ def event_counter(window):
     i=0
     for k in range(max_events):
         window['Event_num'].update(k+1)
+        print(k+1)
         time.sleep(3) # ask how the update works n try to link it into this 
         window.write_event_value('-THREAD2-',i)
+    return
 
 
 
@@ -85,10 +88,13 @@ def Runmode():
 
     window = sg.Window('RUN MODE', layout, finalize=True,size=(600,150),location=(800,150))
 
-    thread_id = threading.Thread(target=ping_stat, args=(window,max_events,), daemon=True)
-    thread_id2 = threading.Thread(target=event_counter, args=(window,), daemon=True)
-    thread_id.start()
-    thread_id2.start()
+    #thread_id = threading.Thread(target=ping_stat, args=(window,max_events,), daemon=True)
+    threading.Thread(target=ping_stat, args=(window,max_events,), daemon=True).start()
+
+    threading.Thread(target=event_counter, args=(window,), daemon=True).start()
+    #thread_id2 = threading.Thread(target=event_counter, args=(window,), daemon=True)
+    #thread_id.start()
+    #thread_id2.start()
 
     return window
 
@@ -140,7 +146,6 @@ while True:
             break
         #except AttributeError:
          #  pass
-
     try:
         event1 , values1 = window1.read(timeout=10)
         max_events = int(values1[0])
